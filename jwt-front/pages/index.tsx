@@ -8,7 +8,7 @@ const IndexPage = () => {
   const [user, setUser] = useState<string>("");
 
   const getUser = (isPayload: boolean) => {
-    client<unknown>(`users/me?isPayload=${isPayload}`)
+    client<unknown>(`auth/me?isPayload=${isPayload}`)
       .then((res) => {
         setUser(
           JSON.stringify(res)

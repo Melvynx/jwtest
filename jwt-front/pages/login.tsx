@@ -1,48 +1,105 @@
 import Layout from "../components/Layout";
-import { Button, Input, styled } from "@nextui-org/react";
+import { Button, Input, styled, Switch, Text } from "@nextui-org/react";
 import { client } from "../utils/client";
 import { JWT } from "../utils/jwt";
+import { useState } from "react";
 
-const AboutPage = () => (
-  <Layout title="About | Next.js + TypeScript Example">
-    <h1>Login</h1>
-    <Form
-      onSubmit={(event) => {
-        event.preventDefault();
-        console.log("SUBMIT");
+const AboutPage = () => {
+  const [isLogin, setIsLogin] = useState(true);
 
-        const form = event.target;
+  return (
+    <Layout title="About | Next.js + TypeScript Example">
+      <h1>Login</h1>
+      <Form
+        onSubmit={(event) => {
+          event.preventDefault();
 
-        const data = {
-          username: form.username.value,
-          password: form.password.value,
-        };
+          const form = event.target;
 
-        client<{ token: string }>("users/authenticate", { data }).then(
-          (res) => {
+          const data = {
+            name: isLogin ? "" : form.username.value,
+            email: form.email.value,
+            password: form.password.value,
+          };
+
+          const requestUrl = form.isLogin.checked ? "login" : "register";
+
+          client<{ token?: string; result: boolean; message?: string }>(
+            `auth/${requestUrl}`,
+            { data }
+          ).then((res) => {
             const token = res.token;
-            JWT.setToken(token);
-          }
-        );
-      }}
-    >
-      <Input bordered labelPlaceholder="Username" name="username" />
-      <Input
-        bordered
-        labelPlaceholder="Password"
-        name="password"
-        type="password"
-      />
-      <Button type="submit">Submit</Button>
-    </Form>
-  </Layout>
-);
+            if (res.result) {
+              JWT.setToken(token);
+            }
+          });
+        }}
+      >
+        <SwitchLabel>
+          <Text
+            css={{
+              color: "white",
+              textGradient: !isLogin
+                ? "45deg, $blue500 -20%, $pink500 50%"
+                : "45deg, $gray600 -20%, $gray600 50%",
+            }}
+            weight="bold"
+          >
+            Register
+          </Text>
+          <Switch
+            bordered
+            shadow
+            color="primary"
+            onChange={(e) => setIsLogin(e.target.checked)}
+            checked={isLogin}
+          />
+          <input
+            type="checkbox"
+            readOnly
+            style={{ display: "none" }}
+            checked={isLogin}
+            name="isLogin"
+          />
+          <Text
+            css={{
+              color: "white",
+              textGradient: isLogin
+                ? "45deg, $blue500 -20%, $pink500 50%"
+                : "45deg, $gray600 -20%, $gray600 50%",
+            }}
+            weight="bold"
+          >
+            Login
+          </Text>
+        </SwitchLabel>
+
+        {!isLogin && <Input bordered placeholder="Name" name="username" />}
+
+        <Input bordered placeholder="Email" name="email" />
+        <Input
+          bordered
+          placeholder="Password"
+          name="password"
+          type="password"
+        />
+        <Button type="submit">Submit</Button>
+      </Form>
+    </Layout>
+  );
+};
 
 const Form = styled("form", {
   display: "flex",
   gap: "$14",
   flexDirection: "column",
   marginTop: "$14",
+});
+
+const SwitchLabel = styled("label", {
+  display: "flex",
+  gap: "$12",
+  margin: "auto",
 });
 
 export default AboutPage;
