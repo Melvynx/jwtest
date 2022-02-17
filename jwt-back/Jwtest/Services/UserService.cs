@@ -8,9 +8,9 @@ namespace Jwtest.Services;
 
 public interface IUserService
 {
-    AuthenticateResponse? Authenticate(AuthenticateRequest model);
-    IEnumerable<User> GetAll();
-    User? GetById(int id);
+    // AuthenticateResponse? Authenticate(AuthenticateRequest model);
+    // IEnumerable<User> GetAll();
+    // User? GetById(int id);
 }
 
 public class UserService : IUserService
@@ -24,28 +24,27 @@ public class UserService : IUserService
         _appSettings = appSettings.Value;
     }
 
-    public AuthenticateResponse? Authenticate(AuthenticateRequest model)
-    {
-        var user = _context.Users.SingleOrDefault(x => x.Username == model.Username && x.Password == model.Password);
+    // public AuthenticateResponse? Authenticate(AuthenticateRequest model)
+    // {
+    //     var user = _context.Users.SingleOrDefault(x => x.UserName == model.Username && x.PasswordHash == model.Password);
+    //     // return null if user not found
+    //     if (user == null) return null;
+    //
+    //     // authentication successful so generate jwt token
+    //     // var token = GenerateJwtToken(user);
+    //
+    //     return new AuthenticateResponse(user, token);
+    // }
 
-        // return null if user not found
-        if (user == null) return null;
+    // public IEnumerable<User> GetAll()
+    // {
+    //     return _context.Users.ToList();
+    // }
 
-        // authentication successful so generate jwt token
-        var token = GenerateJwtToken(user);
-
-        return new AuthenticateResponse(user, token);
-    }
-
-    public IEnumerable<User> GetAll()
-    {
-        return _context.Users.ToList();
-    }
-
-    public User? GetById(int id)
-    {
-        return _context.Users.FirstOrDefault(x => x.Id == id);
-    }
+    // public User? GetById(int id)
+    // {
+    //     return _context.Users.FirstOrDefault(x => x.Id == id);
+    // }
 
     private string GenerateJwtToken(User user)
     {

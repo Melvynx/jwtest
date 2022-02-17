@@ -18,20 +18,20 @@ public class UsersController : ControllerBase
     [HttpPost("authenticate")]
     public IActionResult Authenticate(AuthenticateRequest model)
     {
-        var response = _userService.Authenticate(model);
+        // var response = _userService.Authenticate(model);
+        //
+        // if (response == null)
+        //     return BadRequest(new {message = "Username or password is incorrect"});
 
-        if (response == null)
-            return BadRequest(new {message = "Username or password is incorrect"});
-
-        return Ok(response);
+        return Ok(null);
     }
 
     [Authorize]
     [HttpGet]
     public IActionResult GetAll()
     {
-        var users = _userService.GetAll();
-        return Ok(users);
+        // var users = _userService.GetAll();
+        return Ok(null);
     }
 
     [Authorize]
@@ -40,17 +40,15 @@ public class UsersController : ControllerBase
     {
         var userId = Converter.ObjectToInt(HttpContext.Items["User"]);
 
-        if (isPayload == "true")
-        {
-            var obj = new
-            {
-                Id = userId,
-                Username = HttpContext.Items["Username"],
-            };
-            return Ok(obj);
-        }
+        if (isPayload != "true") return Ok(null);
 
-        var user = _userService.GetById(userId);
-        return Ok(user);
+        var obj = new
+        {
+            Id = userId,
+            Username = HttpContext.Items["Username"],
+        };
+        return Ok(obj);
+
+        // var user = _userService.GetById(userId);
     }
 }
