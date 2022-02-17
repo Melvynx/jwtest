@@ -1,5 +1,6 @@
 using Jwtest.Helpers;
 using Jwtest.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Jwtest.Controllers;
@@ -45,7 +46,7 @@ public class UsersController : ControllerBase
         var obj = new
         {
             Id = userId,
-            Username = HttpContext.Items["Username"],
+            Username = HttpContext.Items["Username"]
         };
         return Ok(obj);
 
